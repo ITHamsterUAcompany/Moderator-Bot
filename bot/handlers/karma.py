@@ -1,5 +1,6 @@
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery
+from re import Match
 
 from ..data_store import DataStore
 
@@ -7,23 +8,22 @@ from ..data_store import DataStore
 karma_router = Router()
 
 
-@karma_router.message(~F.text.startswith("/"))
-async def handle_karma(message: Message, store: DataStore):
-    if not message.reply_to_message:
-        return
+@karma_router.message(F.reply_to_message, F.text.regexp(r"^\+?\d+$").as_("digits"))
+async def handle_karma_plus(message: Message, digits: Match[str], store: DataStore):
     target_user = message.reply_to_message.from_user
-    text = (message.text or "").strip()
-    if not text:
-        return
-    if text.isdigit() or (text.startswith("+") and text[1:].isdigit()):
-        value = int(text.replace("+", ""))
-        new_karma = store.add_karma(target_user.id, value)
-    elif text.startswith("-") and text[1:].isdigit():
-        value = int(text)
-        new_karma = store.add_karma(target_user.id, value)
-    else:
-        return
-    store.set_karma(target_user.id, new_karma)
+    value = int(digits.group(0).replace("+", ""))
+    new_karma = store.add_karma(target_user.id, value)
+    await message.reply(
+        f"⚖️ Карма користувача {target_user.full_name}: <b>{new_karma}</b>\n"
+        f"(Максимум: 1000 | Мінімум: -1000)"
+    )
+
+
+@karma_router.message(F.reply_to_message, F.text.regexp(r"^-\d+$").as_("digits"))
+async def handle_karma_minus(message: Message, digits: Match[str], store: DataStore):
+    target_user = message.reply_to_message.from_user
+    value = int(digits.group(0))
+    new_karma = store.add_karma(target_user.id, value)
     await message.reply(
         f"⚖️ Карма користувача {target_user.full_name}: <b>{new_karma}</b>\n"
         f"(Максимум: 1000 | Мінімум: -1000)"

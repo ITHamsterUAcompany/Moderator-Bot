@@ -5,16 +5,15 @@ from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
 
-from .config import BOT_TOKEN
+from .config import settings
 from .handlers import help_router, moderation_router, report_router, karma_router
 from .handlers.text_moderation import text_moderation_router
-from .middlewares import StoreMiddleware
 from .data_store import DataStore
 
 
 async def main() -> None:
     logging.basicConfig(level=logging.INFO)
-    bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+    bot = Bot(token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dp = Dispatcher()
 
     dp.include_router(help_router)
@@ -28,9 +27,9 @@ async def main() -> None:
     except Exception:
         pass
 
-    # Inject shared DataStore via middleware
+    # Shared DataStore without DI middleware
     store = DataStore()
-    dp.update.outer_middleware(StoreMiddleware(store))
+    dp["store"] = store
 
     await dp.start_polling(bot)
 

@@ -6,7 +6,7 @@ from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram.types import CallbackQuery, Message
 
-from ..config import FAQ_FILE, ADMIN_APPLICATION_URL, CHAT_RULES_URL
+from ..config import settings
 from ..keyboards import main_menu_kb, back_to_help_kb, faq_list_kb, faq_back_kb
 
 
@@ -14,9 +14,9 @@ help_router = Router()
 
 
 def load_faq() -> List[Tuple[str, str]]:
-    if not os.path.exists(FAQ_FILE):
-        raise FileNotFoundError(f"Файл FAQ не знайдено: {FAQ_FILE}")
-    df = pd.read_excel(FAQ_FILE)
+    if not os.path.exists(settings.FAQ_FILE):
+        raise FileNotFoundError(f"Файл FAQ не знайдено: {settings.FAQ_FILE}")
+    df = pd.read_excel(settings.FAQ_FILE)
     df.columns = [c.strip().lower() for c in df.columns]
     if not {"ваше питання", "відповідь"}.issubset(df.columns):
         raise ValueError("У файлі відсутні колонки 'Ваше питання' або 'Відповідь'")
@@ -42,7 +42,7 @@ async def become_admin(callback: CallbackQuery):
     text = (
         "<b>👑 Як стати адміністратором:</b>\n\n"
         "Подайте заявку через офіційну Google форму:\n"
-        f"<a href='{ADMIN_APPLICATION_URL}'>📋 Подати заявку</a>"
+        f"<a href='{settings.ADMIN_APPLICATION_URL}'>📋 Подати заявку</a>"
     )
     await callback.message.answer(text, disable_web_page_preview=True)
     await callback.answer()
@@ -50,7 +50,7 @@ async def become_admin(callback: CallbackQuery):
 
 @help_router.callback_query(F.data == "chat_rules")
 async def chat_rules(callback: CallbackQuery):
-    text = f"<b>❓ Ознайомитися з правилами:</b> <a href='{CHAT_RULES_URL}'>✅ Ознайомитися</a>"
+    text = f"<b>❓ Ознайомитися з правилами:</b> <a href='{settings.CHAT_RULES_URL}'>✅ Ознайомитися</a>"
     await callback.message.answer(text, disable_web_page_preview=True)
     await callback.answer()
 

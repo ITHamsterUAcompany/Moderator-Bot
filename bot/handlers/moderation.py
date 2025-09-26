@@ -43,9 +43,6 @@ async def reply_report(message: Message):
 
 
 @moderation_router.message(Command("spec", "spectator"), IsAdmin())
-from aiogram import Bot
-
-
 async def spec_user(message: Message, bot: Bot):
     if not message.reply_to_message:
         await message.reply("❗ Використай команду у відповідь на повідомлення користувача.")

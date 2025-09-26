@@ -4,7 +4,7 @@ from dataclasses import dataclass, asdict
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
-from .config import DATA_FILE
+from .config import settings
 
 
 @dataclass
@@ -18,7 +18,7 @@ class HistoryEntry:
 class DataStore:
     """JSON-backed store with context-managed save and typed helpers."""
 
-    def __init__(self, file_path: str = DATA_FILE) -> None:
+    def __init__(self, file_path: str = settings.DATA_FILE) -> None:
         self.file_path = file_path
         self.data: Dict[str, Any] = {
             "muted_users": {},

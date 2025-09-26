@@ -5,7 +5,7 @@ from aiogram import Router
 from aiogram.filters import Command
 from aiogram.types import Message
 
-from ..config import DISCORD_WEBHOOK_URL
+from ..config import settings
 
 # Simple in-memory cooldown state
 last_report_time = {}
@@ -47,6 +47,6 @@ async def report_user(message: Message):
         f"📌 Причина: {reason}"
     )
     async with aiohttp.ClientSession() as session:
-        await session.post(DISCORD_WEBHOOK_URL, json={"content": report_msg})
+        await session.post(settings.DISCORD_WEBHOOK_URL, json={"content": report_msg})
     await message.reply("<b>✅ Ви відправили репорт. Очікуйте на відповідь адміністратора.</b>")
 

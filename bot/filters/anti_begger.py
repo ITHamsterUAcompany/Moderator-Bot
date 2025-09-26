@@ -1,7 +1,7 @@
 from aiogram.filters import BaseFilter
 from aiogram.types import Message
 
-from ..config import ANTI_BEGGER_FILE
+from ..config import settings
 
 
 def load_begger_list(path: str) -> list[str]:
@@ -12,7 +12,7 @@ def load_begger_list(path: str) -> list[str]:
         return []
 
 
-ANTI_BEGGER_LIST = load_begger_list(ANTI_BEGGER_FILE)
+ANTI_BEGGER_LIST = load_begger_list(settings.ANTI_BEGGER_FILE)
 
 
 class AntiBegger(BaseFilter):

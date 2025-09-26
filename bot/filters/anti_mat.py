@@ -5,13 +5,8 @@ from aiogram.filters import BaseFilter
 from aiogram.types import Message
 from fuzzywuzzy import fuzz
 
-from ..config import (
-    BAD_WORDS_FILE,
-    letters_rest_table,
-    special_symbols_map,
-    ANTI_MAT_USE_FUZZY,
-    BAD_FUZZY_THRESHOLD,
-)
+from ..config import settings
+from ..constants import letters_rest_table, special_symbols_map
 
 
 def build_inverse_map(table: Dict[str, List[str]]) -> Dict[str, str]:
@@ -41,7 +36,7 @@ def normalize_text(text: str) -> str:
     return normalized
 
 
-def load_bad_words(path: str = BAD_WORDS_FILE) -> List[str]:
+def load_bad_words(path: str = settings.BAD_WORDS_FILE) -> List[str]:
     try:
         with open(path, "r", encoding="utf-8") as f:
             raw = [line.strip().lower() for line in f if line.strip()]
@@ -52,7 +47,7 @@ def load_bad_words(path: str = BAD_WORDS_FILE) -> List[str]:
 
 
 BAD_WORDS = load_bad_words()
-FUZZY_THRESHOLD = BAD_FUZZY_THRESHOLD
+FUZZY_THRESHOLD = settings.BAD_FUZZY_THRESHOLD
 
 
 def text_contains_bad(norm_text: str) -> bool:
@@ -61,20 +56,20 @@ def text_contains_bad(norm_text: str) -> bool:
     for bad in BAD_WORDS:
         if bad and bad in norm_text:
             return True
-    if ANTI_MAT_USE_FUZZY:
+    if settings.ANTI_MAT_USE_FUZZY:
         for bad in BAD_WORDS:
             if not bad:
                 continue
             if fuzz.partial_ratio(norm_text, bad) >= FUZZY_THRESHOLD:
                 return True
     tokens = norm_text.split()
-    if ANTI_MAT_USE_FUZZY:
+    if settings.ANTI_MAT_USE_FUZZY:
         for token in tokens:
             for bad in BAD_WORDS:
                 if fuzz.partial_ratio(token, bad) >= FUZZY_THRESHOLD:
                     return True
     joined = norm_text.replace(" ", "")
-    if ANTI_MAT_USE_FUZZY:
+    if settings.ANTI_MAT_USE_FUZZY:
         for bad in BAD_WORDS:
             L = len(bad)
             if L == 0 or L > len(joined):
