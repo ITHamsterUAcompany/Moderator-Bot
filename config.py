@@ -27,5 +27,5 @@ class Settings(BaseSettings):
 
 
 BOT_TOKEN = "7969025390:AAG62t2wUCOAvc3-ZnVkcKqGoNYOslLDpLA"
-GENAI_API_KEY = "" # ТУТ ТРЕБА АПІ С ГЕМЕНІ
-settings = Settings(BOT_TOKEN=BOT_TOKEN)
+GENAI_API_KEY = "AIzaSyAfM-TZ3GzcMeY5RkER6ygdATHmxhszRqY" # ТУТ ТРЕБА АПІ С ГЕМЕНІ
+settings = Settings(BOT_TOKEN=BOT_TOKEN , GENAI_API_KEY= GENAI_API_KEY)
