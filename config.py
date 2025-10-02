@@ -1,4 +1,5 @@
-import os
+import sys
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from dotenv import load_dotenv
 
@@ -27,5 +28,9 @@ class Settings(BaseSettings):
 
 
 BOT_TOKEN = "7969025390:AAG62t2wUCOAvc3-ZnVkcKqGoNYOslLDpLA"
-GENAI_API_KEY = "AIzaSyAfM-TZ3GzcMeY5RkER6ygdATHmxhszRqY" # ТУТ ТРЕБА АПІ С ГЕМЕНІ
+GENAI_API_KEY = "" # ТУТ ТРЕБА АПІ С ГЕМЕНІ
+if not GENAI_API_KEY:
+    print("❌ Не задан API ключ GENAI_API_KEY | згенерувтаи можна тут https://aistudio.google.com/u/2/api-keys")
+    sys.exit(1)
+
 settings = Settings(BOT_TOKEN=BOT_TOKEN , GENAI_API_KEY= GENAI_API_KEY)
