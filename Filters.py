@@ -1,0 +1,1 @@
+from filters import AntiMat, AntiBegger, IsAdmin  # Compatibility shim
