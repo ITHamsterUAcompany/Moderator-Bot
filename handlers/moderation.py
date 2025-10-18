@@ -1,18 +1,24 @@
+import os
 import asyncio
 from datetime import datetime, timedelta
 from typing import Optional
 
 from aiogram import Router, Bot
-from aiogram.types import Message, ChatPermissions
+from aiogram.types import (
+    Message,
+    ChatPermissions,
+    InlineKeyboardMarkup,
+    InlineKeyboardButton,
+    FSInputFile
+)
 from aiogram.filters import Command
 from aiogram.filters.command import CommandObject
 
-from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, FSInputFile 
 from filters import IsAdmin
 from data_store import DataStore, HistoryEntry, store
 from utils.parse import parse_duration_to_seconds
 
-import os
+from handlers.wallet import get_balance
 
 moderation_router = Router()
 
@@ -149,11 +155,15 @@ async def spec_user(message: Message, bot: Bot, store: DataStore):
     status = chat_member.status
     role = "Адміністратор" if status in ["creator", "administrator"] else "Учасник"
     
+    
+    balance = get_balance(user_id)
+    
     info_text = (
         f"<b>👤 Інформація про користувача:</b>\n"
         f"📝 Ім'я: {user_name}\n"
         f"🏷 Статус: {role}\n"
-        f"⚖️ Карма: {karma}\n"
+        f"⚖️ Карма: {karma}\n\n"
+        f"💳 Баланс: <code>{balance}</code>\n"
         f"🆔 ID: <code>{user_id}</code>\n"
     )
 

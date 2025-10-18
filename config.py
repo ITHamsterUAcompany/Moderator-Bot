@@ -27,8 +27,8 @@ class Settings(BaseSettings):
 
 
 
-BOT_TOKEN = ""
-GENAI_API_KEY = "" # ТУТ ТРЕБА АПІ С ГЕМЕНІ
+BOT_TOKEN = "8478741929:AAEtPGXEnRr2_SMM_hGjELNv1RTYSXjs3k0"
+GENAI_API_KEY = "AIzaSyAx9s-6mtSWGfgJIUCtbSLs0BScgPSNKLc" # ТУТ ТРЕБА АПІ С ГЕМЕНІ
 if not GENAI_API_KEY:
     print("❌ Не задан API ключ GENAI_API_KEY | згенерувтаи можна тут https://aistudio.google.com/u/2/api-keys")
     sys.exit(1)
