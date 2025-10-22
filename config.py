@@ -25,7 +25,7 @@ class Settings(BaseSettings):
     BAD_FUZZY_THRESHOLD: int = 85
 
 
-
+GENIMGAI_API_KEY = "AIzaSyBxAdQN0leAxIefMPHouO07M5RVaAP6wSc"
 
 BOT_TOKEN = "8478741929:AAEtPGXEnRr2_SMM_hGjELNv1RTYSXjs3k0"
 GENAI_API_KEY = "AIzaSyAx9s-6mtSWGfgJIUCtbSLs0BScgPSNKLc" # ТУТ ТРЕБА АПІ С ГЕМЕНІ

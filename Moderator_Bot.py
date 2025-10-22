@@ -8,11 +8,13 @@ from aiogram.client.default import DefaultBotProperties
 from config import settings
 from handlers.wallet import wallet_router
 
-from handlers import help_router, moderation_router, report_router, karma_router, ai_ask
+from handlers import help_router, moderation_router, report_router, karma_router
+from handlers.new_user_capch import captcha_router
 from handlers.user_info import user_info_router
 from handlers.ai_ask import ai_ask_router
 from handlers.text_moderation import text_moderation_router
 from data_store import DataStore, HistoryEntry
+
 
 
 async def main() -> None:
@@ -20,6 +22,7 @@ async def main() -> None:
     bot = Bot(token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dp = Dispatcher()
     
+    dp.include_router(captcha_router)
     dp.include_router(user_info_router)
     dp.include_router(help_router)
     dp.include_router(text_moderation_router)
@@ -29,15 +32,18 @@ async def main() -> None:
     dp.include_router(ai_ask_router)
     dp.include_router(wallet_router)
 
-
     try:
         await bot.delete_webhook(drop_pending_updates=True)
     except Exception:
         pass
+        
+    try:
+        # Shared DataStore without DI middleware
+        store = DataStore()
+        dp["store"] = store
 
-    # Shared DataStore without DI middleware
-    store = DataStore()
-    dp["store"] = store
+    except KeyboardInterrupt:
+        print("⚠️ Бота зупинено")
 
     await dp.start_polling(bot)
 
